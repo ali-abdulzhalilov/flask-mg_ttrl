@@ -1,23 +1,24 @@
-<html>
-	<head>
-		{% if title %}
-		<title>{{ title }}</title>
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+	{% if title %}{{ title }} - blag{% else %}blag{% endif %}
+{% endblock %}
+
+{% block navbar %}
+	<nav class="navbar navbar-default">
+		<a href="{{ url_for('index') }}">home</a>
+		{% if current_user.is_anonymous %}
+		<a href="{{ url_for('login') }}">login</a>
 		{% else %}
-		<title>blag</title>
+		<a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+		<a href="{{ url_for('logout') }}">logout</a>
 		{% endif %}
-	</head>
-	<body>
-		<div>pew: 
-			<a href="{{ url_for('index') }}">home</a>
-			{% if current_user.is_anonymous %}
-			<a href="{{ url_for('login') }}">login</a>
-			{% else %}
-			<a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-			<a href="{{ url_for('logout') }}">logout</a>
-			{% endif %}
-			<a href="{{ url_for('explore') }}">explore</a>
-		</div>
-		<hr>
+		<a href="{{ url_for('explore') }}">explore</a>
+	</nav>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
 		{% with messages = get_flashed_messages() %}
 		{% if messages %}
 		<ul>
@@ -28,6 +29,6 @@
 		{% endif %}
 		{% endwith %}
 		
-		{% block content %}{% endblock %}
-	</body>
-</html>
+		{% block app_content %}{% endblock %}
+	</div>
+{% endblock %}
