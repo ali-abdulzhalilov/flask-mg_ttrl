@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_babel import _
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
@@ -15,7 +16,7 @@ def index():
 		post = Post(body=form.post.data, author=current_user)
 		db.session.add(post)
 		db.session.commit()
-		flash('Your post is now live!')
+		flash(_('Your post is now live!'))
 		return redirect(url_for('index'))
 		
 	page = request.args.get('page', 1, type=int)
@@ -41,7 +42,7 @@ def login():
 		user = User.query.filter_by(username=form.username.data).first()
 		
 		if user is None or not user.check_password(form.password.data):
-			flash('Invalid username or password')
+			flash(_('Invalid username or password'))
 			return redirect(url_for('login'))
 		
 		login_user(user, remember=form.remember_me.data)
@@ -68,7 +69,7 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('now registered')
+		flash(_('now registered'))
 		return redirect(url_for('login'))
 	return render_template('register.html', title='Register', form=form)
 	
@@ -100,7 +101,7 @@ def edit_profile():
 		current_user.username = form.username.data
 		current_user.about_me = form.about_me.data
 		db.session.commit()
-		flash('Your changes have been saved.')
+		flash(_('Your changes have been saved.'))
 		return redirect(url_for('edit_profile'))
 	elif request.method == 'GET':
 		form.username.data = current_user.username
@@ -112,14 +113,14 @@ def edit_profile():
 def follow(username):
 	user = User.query.filter_by(username=username).first()
 	if user is None:
-		flash('User {} not found.'.format(username))
+		flash(_('User %(username)s not found.', username=username))
 		return redirect(url_for('index'))
 	if user == current_user:
-		flash('You cannot follow yourself!')
+		flash(_('You cannot follow yourself!'))
 		return redirect(url_for('user', username=username))
 	current_user.follow(user)
 	db.session.commit()
-	flash('You are following {}'.format(username))
+	flash(_('You are following %(username)s', username=username))
 	return redirect(url_for('user', username=username))
 	
 @app.route('/unfollow/<username>')
@@ -127,14 +128,14 @@ def follow(username):
 def unfollow(username):
 	user = User.query.filter_by(username=username).first()
 	if user is None:
-		flash('User {} not found.'.format(username))
+		flash(_('User %(username)s not found.', username=username))
 		return redirect(url_for('index'))
 	if user == current_user:
-		flash('You cannot unfollow yourself!')
+		flash(_('You cannot unfollow yourself!'))
 		return redirect(url_for('user', username=username))
 	current_user.unfollow(user)
 	db.session.commit()
-	flash('You are not following {}.'.format(username))
+	flash(_('You are not following %(username)s', username=username))
 	return redirect(url_for('user', username=username))
 
 @app.route('/explore')
