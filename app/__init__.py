@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_babel import Babel
+from flask_babel import lazy_gettext as _l
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -24,7 +25,7 @@ bootstrap = Bootstrap(app)
 moment = Moment(app)
 babel = Babel(app)
 
-from app import routes, models, errors
+from app import routes, models, errors, cli
 
 if not app.debug:
 	if not os.path.exists('logs'):

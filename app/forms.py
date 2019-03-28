@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
+from flask_babel import lazy_gettext as _l
 from app.models import User
 
 class LoginForm(FlaskForm):
@@ -38,6 +39,6 @@ class EditProfileForm(FlaskForm):
 				raise ValidationError(_l('Please use a different username.'))
 				
 class PostForm(FlaskForm):
-	post = TextAreaField(_l('Say something', validators=[
+	post = TextAreaField(_l('Say something'), validators=[
 		DataRequired(), Length(min=1, max=140)])
 	submit = SubmitField(_l('Submit'))
