@@ -8,5 +8,5 @@
 			{{ wtf.quick_form(form) }}
 		</div>
 	</div>
-	<p>{{ _('Have an Account?') }}<a href="{{ url_for('login') }}">{{ _('Click to Sign In!') }}</a></p>
+	<p>{{ _('Have an Account?') }}<a href="{{ url_for('auth.login') }}">{{ _('Click to Sign In!') }}</a></p>
 {% endblock %}
