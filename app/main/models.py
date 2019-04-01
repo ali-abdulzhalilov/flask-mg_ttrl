@@ -1,6 +1,5 @@
 from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -33,7 +32,7 @@ class SearchableMixin(object):
 		}
 		
 	@classmethod
-	def after_commit(cls, method):
+	def after_commit(cls, session):
 		for obj in session._changes['add']:
 			if isinstance(obj, SearchableMixin):
 				add_to_index(obj.__tablename__, obj)
