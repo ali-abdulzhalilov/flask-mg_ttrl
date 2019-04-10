@@ -15,7 +15,7 @@ followers = db.Table('followers',
 
 class PaginatedAPIMixin(object):
 	@staticmethod
-	def to_colllection_dict(query, page, per_page, endpoint, **kwargs):
+	def to_collection_dict(query, page, per_page, endpoint, **kwargs):
 		resources = query.paginate(page, per_page, False)
 		data = {
 			'items': [item.to_dict() for item in resources.items],
@@ -149,7 +149,6 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
 		data = {
 			'id': self.id,
 			'username': self.username,
-			'last_seen': self.last_seen.isoformat() + 'Z',
 			'about_me': self.about_me,
 			'post_count': self.posts.count(),
 			'follower_count': self.followers.count(),
@@ -160,6 +159,8 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
 				'followed': url_for('api.get_followed', id=self.id),
 			}
 		}
+		if self.last_seen:
+			data['last_seen'] = self.last_seen.isoformat() + 'Z'
 		if include_email:
 			data['email'] = self.email
 		return data
